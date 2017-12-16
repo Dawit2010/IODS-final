@@ -2,6 +2,7 @@
 title: "IODS course final project"
 author: "Dawit A. Yohannes"
 date: "December 10, 2017"
+abstract: "This is my abstract."
 output:
   html_document:
     theme: cosmo
@@ -13,33 +14,35 @@ output:
     code_folding: show
 ---
 *** 
-## Abstract
 
-## Research Question
+# Research Question
 
-- linear regression of the GNI variable
-- LDA of the new categorical variable HDIgroup
+- linear regression of the GNI variable , Linear regression of HDI as well ??
+- LDA of the new categorical variable HDIgroup...learning how to predict the HDI of a country or it's HDI group
 
-## Data wrangling
-The human dataset has been prepared by merging datasets obtained from the human development reports website (http://hdr.undp.org/en/composite/HDI). The human development index and gender inequality index were combined (done by Tuomo Nieminen as described on https://raw.githubusercontent.com/TuomoNieminen/Helsinki-Open-Data-Science/master/datasets/human_meta.txt).Two variables describing female to male secondary education and labor force participation ratios have been added to the data as described in the course. In addition, a new categorical variable, named HDIgroup, assigning countries a categorical human development status based on their HDI has been added (Read page 3 for more information: http://hdr.undp.org/sites/default/files/hdr2016_technical_notes.pdf). 
+# Data wrangling
+The human dataset has been prepared by merging datasets obtained from the human development reports website (http://hdr.undp.org/en/composite/HDI). The human development index and gender inequality index were combined (done by Tuomo Nieminen as described on https://raw.githubusercontent.com/TuomoNieminen/Helsinki-Open-Data-Science/master/datasets/human_meta.txt).Two variables describing female to male secondary education and labor force participation ratios have been added to the data as described in the course. In addition, a new categorical variable, named HDIgroup, assigning countries a categorical human development status based on their HDI has been added (Read page 3 for more information: http://hdr.undp.org/sites/default/files/hdr2016_technical_notes.pdf).  
 
-
-## Data description
+The script used for preparing this dataset can be found here:https://github.com/Dawit2010/IODS-final/blob/master/dataWrangling.R
 
 
-## Data exloration
+
+# Data description
 
 
-## Method description
+# Data exloration
 
 
-## Results
+# Method description
 
 
-## Conclusion and discussion
+# Results
 
 
-## 
+# Conclusion and discussion
+
+
+
 
 ## R Markdown
 

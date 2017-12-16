@@ -43,6 +43,16 @@ if (window.hljs) {
 </script>
 
 
+<style type="text/css">
+  p.abstract{
+    text-align: center;
+    font-weight: bold;
+  }
+  div.abstract{
+    margin: auto;
+    width: 90%;
+  }
+</style>
 
 <style type="text/css">
 h1 {
@@ -139,58 +149,55 @@ $(document).ready(function () {
 <h1 class="title toc-ignore">IODS course final project</h1>
 <h4 class="author"><em>Dawit A. Yohannes</em></h4>
 <h4 class="date"><em>December 10, 2017</em></h4>
+<div class="abstract">
+<p class="abstract">Abstract</p>
+This is my abstract.
+</div>
 
 </div>
 
 <div id="TOC">
 <ul>
-<li><a href="#abstract">Abstract</a></li>
 <li><a href="#research-question">Research Question</a></li>
 <li><a href="#data-wrangling">Data wrangling</a></li>
 <li><a href="#data-description">Data description</a></li>
 <li><a href="#data-exloration">Data exloration</a></li>
 <li><a href="#method-description">Method description</a></li>
 <li><a href="#results">Results</a></li>
-<li><a href="#conclusion-and-discussion">Conclusion and discussion</a></li>
-<li><a href="#section"></a></li>
+<li><a href="#conclusion-and-discussion">Conclusion and discussion</a><ul>
 <li><a href="#r-markdown">R Markdown</a></li>
 <li><a href="#including-plots">Including Plots</a></li>
+</ul></li>
 </ul>
 </div>
 
 <hr />
-<div id="abstract" class="section level2">
-<h2>Abstract</h2>
-</div>
-<div id="research-question" class="section level2">
-<h2>Research Question</h2>
+<div id="research-question" class="section level1">
+<h1>Research Question</h1>
 <ul>
 <li>linear regression of the GNI variable</li>
 <li>LDA of the new categorical variable HDIgroup</li>
 </ul>
 </div>
-<div id="data-wrangling" class="section level2">
-<h2>Data wrangling</h2>
+<div id="data-wrangling" class="section level1">
+<h1>Data wrangling</h1>
 <p>The human dataset has been prepared by merging datasets obtained from the human development reports website (<a href="http://hdr.undp.org/en/composite/HDI" class="uri">http://hdr.undp.org/en/composite/HDI</a>). The human development index and gender inequality index were combined (done by Tuomo Nieminen as described on <a href="https://raw.githubusercontent.com/TuomoNieminen/Helsinki-Open-Data-Science/master/datasets/human_meta.txt" class="uri">https://raw.githubusercontent.com/TuomoNieminen/Helsinki-Open-Data-Science/master/datasets/human_meta.txt</a>).Two variables describing female to male secondary education and labor force participation ratios have been added to the data as described in the course. In addition, a new categorical variable, named HDIgroup, assigning countries a categorical human development status based on their HDI has been added (Read page 3 for more information: <a href="http://hdr.undp.org/sites/default/files/hdr2016_technical_notes.pdf" class="uri">http://hdr.undp.org/sites/default/files/hdr2016_technical_notes.pdf</a>).</p>
+<p>The script used for preparing this dataset can be found here:<a href="https://github.com/Dawit2010/IODS-final/blob/master/dataWrangling.R" class="uri">https://github.com/Dawit2010/IODS-final/blob/master/dataWrangling.R</a></p>
 </div>
-<div id="data-description" class="section level2">
-<h2>Data description</h2>
+<div id="data-description" class="section level1">
+<h1>Data description</h1>
 </div>
-<div id="data-exloration" class="section level2">
-<h2>Data exloration</h2>
+<div id="data-exloration" class="section level1">
+<h1>Data exloration</h1>
 </div>
-<div id="method-description" class="section level2">
-<h2>Method description</h2>
+<div id="method-description" class="section level1">
+<h1>Method description</h1>
 </div>
-<div id="results" class="section level2">
-<h2>Results</h2>
+<div id="results" class="section level1">
+<h1>Results</h1>
 </div>
-<div id="conclusion-and-discussion" class="section level2">
-<h2>Conclusion and discussion</h2>
-</div>
-<div id="section" class="section level2">
-<h2></h2>
-</div>
+<div id="conclusion-and-discussion" class="section level1">
+<h1>Conclusion and discussion</h1>
 <div id="r-markdown" class="section level2">
 <h2>R Markdown</h2>
 <p>This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <a href="http://rmarkdown.rstudio.com" class="uri">http://rmarkdown.rstudio.com</a>.</p>
@@ -233,6 +240,7 @@ library(GGally)
 
 #ggpairs(human)</code></pre>
 <p>Note that the <code>echo = FALSE</code> parameter was added to the code chunk to prevent printing of the R code that generated the plot.</p>
+</div>
 </div>
 
 
