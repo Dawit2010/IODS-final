@@ -9,31 +9,85 @@ output:
     toc: true
     toc_depth: 2
     fig_caption: true
-    fig_width: 6
-    fig_height: 4
+    fig_width: 12
+    fig_height: 10
     code_folding: show
 ---
 *** 
 
-# Research Question
+# Research Questions
 
-- linear regression of the GNI variable , Linear regression of HDI as well ??
-- LDA of the new categorical variable HDIgroup...learning how to predict the HDI of a country or it's HDI group
+Gross national income (GNI per capita) is an important measure of the wealth of countries and their citizens. Human development is a critical capital that countries in early development stages usually ignore. In this analysis, we want to see what human development factors are strongly related to GNI, possibly predicting the GNI status of countries thus also suggesting human development dimensions that should be given due focus. 
+
+- Method: we apply linear regression with GNI per capita as the target variable.
+
+LDA of the new categorical variable HDIgroup...learning how to predict the HDI of a country or it's HDI group
 
 # Data wrangling
-The human dataset has been prepared by merging datasets obtained from the human development reports website (http://hdr.undp.org/en/composite/HDI). The human development index and gender inequality index were combined (done by Tuomo Nieminen as described on https://raw.githubusercontent.com/TuomoNieminen/Helsinki-Open-Data-Science/master/datasets/human_meta.txt).Two variables describing female to male secondary education and labor force participation ratios have been added to the data as described in the course. In addition, a new categorical variable, named HDIgroup, assigning countries a categorical human development status based on their HDI has been added (Read page 3 for more information: http://hdr.undp.org/sites/default/files/hdr2016_technical_notes.pdf).  
-
-The script used for preparing this dataset can be found here:https://github.com/Dawit2010/IODS-final/blob/master/dataWrangling.R
-
-
+The script used for preparing the dataset for this analysis can be found here:https://github.com/Dawit2010/IODS-final/blob/master/dataWrangling.R
 
 # Data description
+The human dataset has been prepared by merging two datasets obtained from the human development reports website (http://hdr.undp.org/en/composite/HDI). The human development index and gender inequality index were combined (done by Tuomo Nieminen as described on https://raw.githubusercontent.com/TuomoNieminen/Helsinki-Open-Data-Science/master/datasets/human_meta.txt).The human development index dataset contains measurements indicating three dimensions of development for each country;namely, healthy life (life expectancy), being knowledgeable (expected education in years and mean education in years) and standard of life (Gross National Income per capita, GNIperCapita). It also contains the HDI index which is a geometric mean of the normalized indices of the three dimensions. The gender inequality index(gii) dataset contains measurement of the gii and other important dimensions of human development that are used to calculate the gii for each country. These include variables pertaining to reproductive health (such as maternal mortality ratio), female empowerment (parliamentary seats occupied by females), and economic status (female labor market participation). Higher gii value indicates higher disparity between males and females and thus loss to human development. 
+
+For this analysis, two variables describing female to male secondary education and labor force participation ratios have been added to the data as described in the course. In addition, a new categorical variable, named HDIgroup, assigning countries a categorical human development status based on their HDI has been added (Read page 3 for more information: http://hdr.undp.org/sites/default/files/hdr2016_technical_notes.pdf).  
 
 
 # Data exloration
+Our dataset contains 155 country observations with 19 variables measuring HDI and gii related performance. First, the correlation between every pair of variables (excluding the factor variable HDIgroup) is evaluated. Particularly,GNI per capita is strongly correlated with human development index (HDI), life expectancy, expected years of education,mean years of education, and secondary education levels. The strong relationship with HDI is expected as the HDI was originally calculated by including GNI percapita (as a measure of standard of life). GNI per capita also has strong negative correlation with gender inequality index(gii), maternal mortality ratio and adolescence birth rate (Fig.1)
 
+```{r message=FALSE, warning=FALSE,fig.cap=paste("Fig.1: Correlation between every pair of variables")}
+library(ggplot2)
+library(dplyr)
+library(GGally)
+library(corrplot)
+
+# Read human data 
+human <- read.table("data/human.txt",header=T, sep="\t")
+dim(human)
+
+cor_matrix<-cor(dplyr::select(human, -HDIgroup)) 
+corrplot(cor_matrix,method="color")
+
+
+```
+
+
+```{r message=FALSE, warning=FALSE,fig.cap=paste("Table 1: Sorted correlation coefficients to GNIperCapita")}
+
+corrToGNI <- as.data.frame(sort(abs(cor_matrix[rownames(cor_matrix)=="GNIperCapita",]),decreasing=T))
+colnames(corrToGNI) <- "GNIperCapita"
+corrToGNI
+
+```
+
+We have listed variables from the highest absolute correlation to the lowest to GNIperCapita on Table 1. From this list we can select variables witih interesting relationship with our variable of interest, GNIperCapita (Fig.2). GNIperCapita has a highly skewed distribution with many countries having relatively small while few countries having high GNIperCapita. Expected years of education appears to be the only variable with typical normal distribution across the countries.  
+
+```{r message=FALSE, warning=FALSE,fig.cap=paste("Fig.2: Distribution of selected variables and their relationship with other variables")}
+
+selectedVariables <- c("GNIperCapita","LifeExpectancy","ExpEduInYears","GII","AdolescentBirthRate","SecondaryEducFtoM")
+
+p <- ggpairs(human[,selectedVariables], mapping = aes(), lower = list(combo = wrap("facethist", bins = 20)))
+p 
+
+```
 
 # Method description
+Linear regression was used to model the relationship between the different human development measurements to our target variable of interest, GNIperCapita. We pre-selected the predictor variables based the strength of the strength of their correlation to GNIpercapita. We excluded variables HDI (since it was originally calculated as a function of GNIperCapita in addition to other variables - thus is redundant), and HDI and gii Rank variables. 
+
+
+```{r message=FALSE, warning=FALSE,fig.cap=paste()}
+
+selectedVariables <- c("GNIperCapita","LifeExpectancy","ExpEduInYears","GII","MeanEduInYears","SecondaryEducFemale","AdolescentBirthRate","SecondaryEducMale","MaternalMortalityRatio","SecondaryEducFtoM")
+
+humanSelected <- human[,selectedVariables]
+
+lmodel <- lm(GNIperCapita ~ ., data = humanSelected)
+summary(lmodel)
+
+str(lmodel)
+lmodel$terms
+
+```
 
 
 # Results
@@ -50,19 +104,6 @@ This is an R Markdown document. Markdown is a simple formatting syntax for autho
 
 When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
 
-```{r message=FALSE, warning=FALSE}
-
-# Read human data to make new changes from Rstudio exercise 5
-human <- read.table("data/human.txt",header=T, sep="\t")
-str(human)
-
-#summary(human)
-
-library(GGally)
-
-#ggpairs(human)
-
-```
 
 ## Including Plots
 
