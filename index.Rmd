@@ -1,56 +1,60 @@
 ---
 title: "IODS course final project"
-author: "Dawit A. Yohannes"
+author: "Dawit A. Yohannes (dawit.yohannes@helsinki.fi)"
 date: "December 10, 2017"
-abstract: "This is my abstract."
+abstract: "In this report, human development factors that have significantly strong relationship with GNI per capita, an indicator of a county's productivity and wealth, were identified and assessed. Public data from UNDP was used for the analysis. Linear model were utilized to evaluate human develpment indicators with respect to how well they explain GNI per capita. Multiple models were evaluated for predictive performance. Among the best models, health and knowledge related variables had significantly strong relationship with GNI per capita, suggesting that long healthy life and better prospects of education during childhood have strong relationship with higher GNI per capita."
 output:
   html_document:
     theme: cosmo
     toc: true
     toc_depth: 2
     fig_caption: true
-    fig_width: 12
+    fig_width: 15
     fig_height: 10
     code_folding: show
 ---
 *** 
 
-# Research Questions
+## Research Questions
 
-Gross national income (GNI per capita) is an important measure of the wealth of countries and their citizens. Human development is a critical capital that countries in early development stages usually ignore. In this analysis, we want to see what human development factors are strongly related to GNI, possibly predicting the GNI status of countries thus also suggesting human development dimensions that should be given due focus. 
+Gross national income (GNI per capita) is an important measure of the wealth of countries and their citizens. A more knowledgeable, healthy and equal society fosters an environment of increased productivity resulting in higher GNI per capita. Human development is thus a critical capital that countries in early development stages can not afford to ignore. In this analysis, we want to test this general hypothesis by identifying human development factors that are strongly related to GNI, that also possibly allow prediction of the GNI status of countries thus suggesting critical human development dimensions that should be given due focus. 
 
-- Method: we apply linear regression with GNI per capita as the target variable.
-
-LDA of the new categorical variable HDIgroup...learning how to predict the HDI of a country or it's HDI group
-
-# Data wrangling
+## Data wrangling
 The script used for preparing the dataset for this analysis can be found here:https://github.com/Dawit2010/IODS-final/blob/master/dataWrangling.R
 
-# Data description
-The human dataset has been prepared by merging two datasets obtained from the human development reports website (http://hdr.undp.org/en/composite/HDI). The human development index and gender inequality index were combined (done by Tuomo Nieminen as described on https://raw.githubusercontent.com/TuomoNieminen/Helsinki-Open-Data-Science/master/datasets/human_meta.txt).The human development index dataset contains measurements indicating three dimensions of development for each country;namely, healthy life (life expectancy), being knowledgeable (expected education in years and mean education in years) and standard of life (Gross National Income per capita, GNIperCapita). It also contains the HDI index which is a geometric mean of the normalized indices of the three dimensions. The gender inequality index(gii) dataset contains measurement of the gii and other important dimensions of human development that are used to calculate the gii for each country. These include variables pertaining to reproductive health (such as maternal mortality ratio), female empowerment (parliamentary seats occupied by females), and economic status (female labor market participation). Higher gii value indicates higher disparity between males and females and thus loss to human development. 
+## Data description
+The dataset used in this analysis, called the 'human' dataset, has been prepared by merging two datasets obtained from the human development reports website (http://hdr.undp.org/en/composite/HDI),the human development index and gender inequality index (done by Tuomo Nieminen as described on https://raw.githubusercontent.com/TuomoNieminen/Helsinki-Open-Data-Science/master/datasets/human_meta.txt).The human development index dataset contains measurements indicating three dimensions of development for each country;namely, healthy life (life expectancy), being knowledgeable (expected education in years and mean education in years) and standard of life (Gross National Income per capita, GNIperCapita). It also contains the HDI index which is a geometric mean of the normalized indices of the three dimensions. The gender inequality index(gii) dataset contains measurement of the gii and other important dimensions of human development that are used to calculate the gii for each country. These include variables pertaining to reproductive health (such as maternal mortality ratio), female empowerment (parliamentary seats occupied by females), and economic status (female labor market participation). Higher gii value indicates higher disparity between males and females and thus loss to human development. 
 
 For this analysis, two variables describing female to male secondary education and labor force participation ratios have been added to the data as described in the course. In addition, a new categorical variable, named HDIgroup, assigning countries a categorical human development status based on their HDI has been added (Read page 3 for more information: http://hdr.undp.org/sites/default/files/hdr2016_technical_notes.pdf).  
 
+## Data exloration
+Our dataset contains 155 observations (countries) each with 19 variables measuring HDI and gii related performance. First, we have a detailed look into our variable of interest, GNIperCapita. GNIperCapita has a highly skewed distribution with many countries having relatively small while fewer countries having high GNI per capita. A closer look in GNIperCapita per each HDIgroup shows it is normally distributed in each HDI status group, with the highest mean and most variable GNIpercapita in countries with veryhigh HDI (HDI > 0.8). The mean GNIpercapita progressively decreases from veryhigh to low HDI countries (Fig.1). 
 
-# Data exloration
-Our dataset contains 155 country observations with 19 variables measuring HDI and gii related performance. First, the correlation between every pair of variables (excluding the factor variable HDIgroup) is evaluated. Particularly,GNI per capita is strongly correlated with human development index (HDI), life expectancy, expected years of education,mean years of education, and secondary education levels. The strong relationship with HDI is expected as the HDI was originally calculated by including GNI percapita (as a measure of standard of life). GNI per capita also has strong negative correlation with gender inequality index(gii), maternal mortality ratio and adolescence birth rate (Fig.1)
-
-```{r message=FALSE, warning=FALSE,fig.cap=paste("Fig.1: Correlation between every pair of variables")}
+```{r message=FALSE, warning=FALSE,fig.cap=paste("Fig.1: Distribution of GNI per capita")}
 library(ggplot2)
 library(dplyr)
 library(GGally)
 library(corrplot)
+source("plotFxns.R")
 
 # Read human data 
 human <- read.table("data/human.txt",header=T, sep="\t")
 dim(human)
 
+# Distribution of GNIperCapita
+dpot1 <- ggplot(human, aes(x = GNIperCapita)) + geom_density(fill = "lightblue", alpha=0.6) + theme_bw()
+dpot2 <- ggplot(human, aes(x = GNIperCapita,fill = HDIgroup)) + geom_density(position="identity", alpha=0.6) + theme_bw()
+multiplot(dpot1, dpot2, cols = 2)
+```
+
+Next, the correlation between every pair of variables (excluding the factor variable HDIgroup) is evaluated. Particularly,GNI per capita is strongly correlated with human development index (HDI), life expectancy, expected years of education,mean years of education, and secondary education levels. The strong relationship with HDI is expected as the HDI was originally calculated by including GNI percapita (as a measure of standard of life). GNI per capita also has strong negative correlation with gender inequality index(gii), maternal mortality ratio and adolescence birth rate (Fig.2)
+
+```{r message=FALSE, warning=FALSE,fig.cap=paste("Fig.2: Correlation between every pair of variables")}
 cor_matrix<-cor(dplyr::select(human, -HDIgroup)) 
 corrplot(cor_matrix,method="color")
 
 
 ```
-
 
 ```{r message=FALSE, warning=FALSE,fig.cap=paste("Table 1: Sorted correlation coefficients to GNIperCapita")}
 
@@ -60,62 +64,148 @@ corrToGNI
 
 ```
 
-We have listed variables from the highest absolute correlation to the lowest to GNIperCapita on Table 1. From this list we can select variables witih interesting relationship with our variable of interest, GNIperCapita (Fig.2). GNIperCapita has a highly skewed distribution with many countries having relatively small while few countries having high GNIperCapita. Expected years of education appears to be the only variable with typical normal distribution across the countries.  
+We have listed variables from the highest absolute correlation to the lowest to GNIperCapita on Table 1. From this list we can select variables with interesting relationship with our variable of interest, GNIperCapita.
 
-```{r message=FALSE, warning=FALSE,fig.cap=paste("Fig.2: Distribution of selected variables and their relationship with other variables")}
+Further evaluation of the distribution and relationship of variables was done for selected variables. Expected years of education appears to be the only variable with typical normal distribution (Fig.3).  
+
+```{r message=FALSE, warning=FALSE,fig.cap=paste("Fig.3: Distribution of selected variables and their relationship with other variables")}
 
 selectedVariables <- c("GNIperCapita","LifeExpectancy","ExpEduInYears","GII","AdolescentBirthRate","SecondaryEducFtoM")
-
-p <- ggpairs(human[,selectedVariables], mapping = aes(), lower = list(combo = wrap("facethist", bins = 20)))
-p 
+cplot <- ggpairs(human[,selectedVariables], mapping = aes(), lower = list(continuous = "smooth",combo = wrap("facethist", bins = 20)))
+cplot 
 
 ```
 
-# Method description
-Linear regression was used to model the relationship between the different human development measurements to our target variable of interest, GNIperCapita. We pre-selected the predictor variables based the strength of the strength of their correlation to GNIpercapita. We excluded variables HDI (since it was originally calculated as a function of GNIperCapita in addition to other variables - thus is redundant), and HDI and gii Rank variables. 
+## Method description
+We fit linear regression model with GNIperCapita as the target variable to evaluate the relationship it has with other human development indicators. We pre-selected the predictor variables based on the strength of their correlation to GNIpercapita. We excluded variables HDI (since it was originally calculated as a function of GNIperCapita in addition to other variables - thus is redundant), and rank variables of HDI and gii. 
 
+We first fit a linear model with all pre-selected predictor variables: namely, ExpEduInYears,MeanEduInYears,SecondaryEducFemale,SecondaryEducMale,SecondaryEducFtoM,MaternalMortalityRatio,LifeExpectancy,AdolescentBirthRate and GII. We also fit three more models each using variables representing one dimension of human develpment, that is, using health, knowledge and inequality indicator variables separately. In this case, we further improve the models by removing variables that have non-significant coefficient estimates and fitting the model again by using only significantly related variables to GNIperCapita. 
 
-```{r message=FALSE, warning=FALSE,fig.cap=paste()}
+We also evaluate and compare linear models using dredge function in MUMIn R package, which allows comparison of models with different combination of the predictor variables using the Akaike information criterion (AIC). AIC estimates the quality of each model relative to other models, with good models having smaller AIC indicating smaller relative information loss (For more on AIC: https://en.wikipedia.org/wiki/Akaike_information_criterion).
 
-selectedVariables <- c("GNIperCapita","LifeExpectancy","ExpEduInYears","GII","MeanEduInYears","SecondaryEducFemale","AdolescentBirthRate","SecondaryEducMale","MaternalMortalityRatio","SecondaryEducFtoM")
+```{r message=FALSE, warning=FALSE}
+selectedVariables <- c("GNIperCapita","ExpEduInYears","MeanEduInYears","SecondaryEducFemale","SecondaryEducMale","SecondaryEducFtoM","MaternalMortalityRatio","LifeExpectancy","AdolescentBirthRate","GII")
 
 humanSelected <- human[,selectedVariables]
 
-lmodel <- lm(GNIperCapita ~ ., data = humanSelected)
-summary(lmodel)
+completeModel <- lm(GNIperCapita ~ ., data = humanSelected)
+summary(completeModel)
 
-str(lmodel)
-lmodel$terms
+par(mfrow = c(2,2))
+plot(completeModel, which = c(1, 2, 5))
 
 ```
 
+## Results
+We first present the summary of our complete model in which we are using all selected variables. As can be seen in the summary output above, all variables except MeanEduInYears, SecondaryEducFtoM and GII show strong relationship with GNIpercapita. Roughly speaking, keeping other variables constant, every unit increase in ExpEduInYears, increases GNIpercapita by 1804.6, while a unit increase in lifeExpectancy results in an GNIpercapita increase by 988. 
 
-# Results
+We can also see from the diagnostic plot of this model that the residuals are fairly spread randomly across all fitted values, with residuals for Qatar, kuwait and singapore having a distinctively higher residuals. These data points also appear as outliers in the Q-Q plot making the assumption of normaly distributed residuals questionable for the model. The residuals vs leverage plot for the complete model shows no data point with significant influence, data point Qatar has a high cook's distance and is a clear outlier, however it is in the same trend as the other points. 
 
-
-# Conclusion and discussion
-
-
-
-
-## R Markdown
-
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-
-## Including Plots
-
-You can also embed plots, for example:
+We can log transform our response variable to have a model with better properties of the residuals in line with the assumptions in linear regression model as seen below. However, only the complete model with untransformed response variable would be used when comparing with other models in this report.
 
 ```{r message=FALSE, warning=FALSE}
-#summary(human)
+completeModelLog <- lm(log2(GNIperCapita) ~ ., data = humanSelected)
+summary(completeModelLog)
 
-library(GGally)
-
-#ggpairs(human)
+par(mfrow = c(2,2))
+plot(completeModelLog, which = c(1, 2, 5))
 
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+Next, we assess three other models that utilized one dimension specific variables (knowledge, health and inequality related variables). Each of these three models explain around 40% of the variance in GNIpercapita (Adjusted R-squared ~ 40%), in comparison, the complete model explained 47% of the variance in GNIpercapita.  
+
+
+```{r message=FALSE, warning=FALSE}
+
+knowledgeModel <- lm(GNIperCapita ~ ExpEduInYears  , data = humanSelected)
+summary(knowledgeModel)
+
+healthModel <- lm(GNIperCapita ~ LifeExpectancy + AdolescentBirthRate, data = humanSelected)
+summary(healthModel)
+
+inequalityModel <- lm(GNIperCapita ~ GII, data = humanSelected)
+summary(inequalityModel)
+
+```
+
+Fig.4 shows the diagnostic plots for the three models. All three models have a relatively poor Q-Q plot, indicating that the residuals are likely not normally distributed. Removal of outlier observations from the model will likely improve this. The residuals also show a particularly distinctive nonrandom values in the model that used only health related variables (middle row).
+
+```{r message=FALSE, warning=FALSE,fig.cap=paste("Fig.4: Diagnostic models for models using knowledge (top), health and inequality variables.")}
+par(mfrow = c(3,3))
+plot(knowledgeModel, which = c(1))
+plot(knowledgeModel, which = c(2))
+plot(knowledgeModel, which = c(5))
+
+plot(healthModel, which = c(1))
+plot(healthModel, which = c(2))
+plot(healthModel, which = c(5))
+
+plot(inequalityModel, which = c(1))
+plot(inequalityModel, which = c(2))
+plot(inequalityModel, which = c(5))
+
+
+
+```
+
+Next, we compare linear models fitted using different combinations of variables by applying the dredge function in MUMIn R package, which allows comparison of models using the Akaike information criterion (AIC). Table 2 lists the top 10 models with the variables used. The best model uses all variables except GII and MeanEduInYears, while in most of the top 10 models variables GII, MeanEduInYears and SecondaryEducFtoM have been excluded. We pick the best model from this analysis, and the other models we saw above and compare their validation error.
+
+```{r message=FALSE, warning=FALSE,fig.cap=paste("Table 2: top 10 models")}
+library(MuMIn)
+
+# Evaluating all possible models using dredge function
+completeModel <- lm(GNIperCapita ~ .,data=humanSelected,na.action = "na.fail")
+modelEvaluation <- dredge(completeModel)
+head(modelEvaluation[,!colnames(modelEvaluation) %in% c("logLik","weight","delta")],10)
+
+# The best model with the smallest AIC
+bestSelectedModel <- lm(GNIperCapita ~ ExpEduInYears + SecondaryEducFemale + SecondaryEducMale + SecondaryEducFtoM + MaternalMortalityRatio + LifeExpectancy + AdolescentBirthRate, data = humanSelected)
+summary(bestSelectedModel)
+```
+
+We now have five linear models whose validation errors we can compare: the complete model, the knowledgeModel,healthModel,inequalityModel and the bestSelectedModel (based on AIC). We perform 10-fold cross validation for each model using cv.lm function in the DAAG package (Fig.5). The average error in prediction of GNIpercapita was calcuated as the square root of the cross validation residual sum of squares (ms) divided by number of observations.
+
+
+```{r message=FALSE, warning=FALSE,fig.cap=paste("Fig.5: cross-validation plots")}
+# K-fold cross-validation
+library(DAAG)
+
+par(mfrow = c(2,3))
+
+models <- c("completeModel","knowledgeModel","healthModel","inequalityModel","bestSelectedModel")
+predictionErrors <- c()
+
+for(m in models){
+# 10 fold cross-validation for model
+themodel <- get(m)
+cv <- cv.lm(data = humanSelected, form.lm=themodel, m=10,printit = F,main=m)
+
+# average cross validation prediction error is the square root of the cross validation residual sum of squares (ms) divided by number of observations.
+cvErr <- sqrt(as.numeric(attributes(cv)$ms)/nrow(humanSelected))
+predictionErrors <- c(predictionErrors,cvErr)
+}
+
+modError <- data.frame(models,cvError = round(predictionErrors))
+modError[order(modError$cvError,decreasing=F),]
+
+
+```
+
+The cross-validation result indicates that the bestSelectedModel (the model with the lest AIC) has the lowest cross-validation error(1086) and is followed by the completeModel. The best SelectedModel is fit using all variables showing strong correlation with GNIpercapita except gii and MeanEduInYears.
+
+## Conclusion and discussion
+
+Our linear models have enabled us to identify factors with strong relationship to GNI per capita. Particularly in the better models with smaller prediction error, health and knowledge related variables had significantly strong linear relationship with GNI per capita. Among these, the health related variable life expectancy and the knowledge related variable ExpEduInYears (expected education in years for children) has shown consistently strong relatioship with GNI per capita, suggesting that long healthy life and better prospects of education during childhood have strong relationship with higher GNI per capita. 
+
+It's important to mention that, since some of our models violate basic assumptions in linear regression, the models in this report can be improved, using approaches such as transformation techniques or applying polynomial regression models. Nonetheless, the results strongly support the initial hypothesis in the strong relationship of human development and a country's productivity as indicated by GNI per capita.
+
+## References
+
+http://hdr.undp.org/en/content/human-development-index-hdi
+
+https://onlinecourses.science.psu.edu/stat501/node/250
+
+https://en.wikipedia.org/wiki/Akaike_information_criterion
+
+
+
