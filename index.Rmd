@@ -1,6 +1,6 @@
 ---
 title: "IODS course final project"
-author: "Dawit A. Yohannes (dawit.yohannes@helsinki.fi)"
+author: "Dawit Afework Yohannes (dawit.yohannes@helsinki.fi)"
 date: "December 10, 2017"
 abstract: "In this report, human development factors that have significantly strong relationship with GNI per capita, an indicator of a county's productivity and wealth, were identified and assessed. Public data from UNDP was used for the analysis. Linear model were utilized to evaluate human develpment indicators with respect to how well they explain GNI per capita. Multiple models were evaluated for predictive performance. Among the best models, health and knowledge related variables had significantly strong relationship with GNI per capita, suggesting that long healthy life and better prospects of education during childhood have strong relationship with higher GNI per capita."
 
