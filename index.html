@@ -477,7 +477,7 @@ summary(bestSelectedModel)</code></pre>
 ## Residual standard error: 13310 on 147 degrees of freedom
 ## Multiple R-squared:  0.5084, Adjusted R-squared:  0.485 
 ## F-statistic: 21.72 on 7 and 147 DF,  p-value: &lt; 2.2e-16</code></pre>
-<p>We now have five linear models whose validation error we compare: the complete model, the knowledgeModel,healthModel,inequalityModel and the bestSelectedModel (based on AIC). We perform 10-fold cross validation for each model using cv.lm function in the DAAG package (Fig.5). The average error in prediction of GNIpercapita was calcuated as the square root of the cross validation residual sum of squares (ms) divided by number of observations.</p>
+<p>We now have five linear models whose validation errors we can compare: the complete model, the knowledgeModel,healthModel,inequalityModel and the bestSelectedModel (based on AIC). We perform 10-fold cross validation for each model using cv.lm function in the DAAG package (Fig.5). The average error in prediction of GNIpercapita was calcuated as the square root of the cross validation residual sum of squares (ms) divided by number of observations.</p>
 <pre class="r"><code># K-fold cross-validation
 library(DAAG)
 
@@ -513,8 +513,9 @@ Fig.5: cross-validation plots
 </div>
 <div id="conclusion-and-discussion" class="section level2">
 <h2>Conclusion and discussion</h2>
-<p>Our linear models have enabled us to identify factors with strong relationship to GNI per capita. Particularly in the better models with smaller prediction error, health and knowledge related variables had significantly strong linear relationship with GNI per capita. Among these, the health related variable life expectancy and the knowledge related variable ExpEduInYears (expected education in years for children) has shown consistently strong relatioship with GNI per capita, suggesting that long healthy life and better prospects of education during childhood have strong relationship with higher GNI per capita.</p>
+<p>Our linear models have enabled us to identify factors with strong relationship to GNI per capita. Particularly in the better models with smaller prediction error, health and knowledge related variables had significantly strong linear relationship with GNI per capita. Among these, the health related variable life expectancy and the knowledge related variable ExpEduInYears (expected education in years for children) have shown consistently strong relatioship with GNI per capita, suggesting that long healthy life and better prospects of education during childhood have strong relationship with higher GNI per capita.</p>
 <p>It’s important to mention that, since some of our models violate basic assumptions in linear regression, the models in this report can be improved, using approaches such as transformation techniques or applying polynomial regression models. Nonetheless, the results strongly support the initial hypothesis in the strong relationship of human development and a country’s productivity as indicated by GNI per capita.</p>
+<hr />
 </div>
 <div id="references" class="section level2">
 <h2>References</h2>

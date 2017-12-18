@@ -3,6 +3,7 @@ title: "IODS course final project"
 author: "Dawit A. Yohannes (dawit.yohannes@helsinki.fi)"
 date: "December 10, 2017"
 abstract: "In this report, human development factors that have significantly strong relationship with GNI per capita, an indicator of a county's productivity and wealth, were identified and assessed. Public data from UNDP was used for the analysis. Linear model were utilized to evaluate human develpment indicators with respect to how well they explain GNI per capita. Multiple models were evaluated for predictive performance. Among the best models, health and knowledge related variables had significantly strong relationship with GNI per capita, suggesting that long healthy life and better prospects of education during childhood have strong relationship with higher GNI per capita."
+
 output:
   html_document:
     theme: cosmo
@@ -195,10 +196,11 @@ The cross-validation result indicates that the bestSelectedModel (the model with
 
 ## Conclusion and discussion
 
-Our linear models have enabled us to identify factors with strong relationship to GNI per capita. Particularly in the better models with smaller prediction error, health and knowledge related variables had significantly strong linear relationship with GNI per capita. Among these, the health related variable life expectancy and the knowledge related variable ExpEduInYears (expected education in years for children) has shown consistently strong relatioship with GNI per capita, suggesting that long healthy life and better prospects of education during childhood have strong relationship with higher GNI per capita. 
+Our linear models have enabled us to identify factors with strong relationship to GNI per capita. Particularly in the better models with smaller prediction error, health and knowledge related variables had significantly strong linear relationship with GNI per capita. Among these, the health related variable life expectancy and the knowledge related variable ExpEduInYears (expected education in years for children) have shown consistently strong relatioship with GNI per capita, suggesting that long healthy life and better prospects of education during childhood have strong relationship with higher GNI per capita. 
 
 It's important to mention that, since some of our models violate basic assumptions in linear regression, the models in this report can be improved, using approaches such as transformation techniques or applying polynomial regression models. Nonetheless, the results strongly support the initial hypothesis in the strong relationship of human development and a country's productivity as indicated by GNI per capita.
 
+*** 
 ## References
 
 http://hdr.undp.org/en/content/human-development-index-hdi
